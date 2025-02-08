@@ -157,7 +157,7 @@ sympy==1.13.1
 tenacity==9.0.0
 text-unidecode==1.3
 thinc==8.3.4
-threadpoolctl==3.5.0
+threadpoolctl
 tiktoken==0.8.0
 tls-client==1.0.1
 tokenizers==0.20.3
