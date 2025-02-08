@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Upload & Query</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f5f5f5; /* Light grey background */
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #333;
+        }
+
+        .container {
+            background: white;
+            width: 100%;
+            max-width: 550px;
+            border-radius: 12px;
+            padding: 40px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        h2 {
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 30px;
+            color: #333;
+        }
+
+        .input-group {
+            margin-bottom: 25px;
+            text-align: left;
+        }
+
+        input[type="file"], input[type="text"] {
+            width: 100%;
+            padding: 15px;
+            margin-top: 12px;
+            border-radius: 10px;
+            border: 1px solid #ddd;
+            font-size: 16px;
+            background-color: #fafafa;
+        }
+
+        button {
+            width: 100%;
+            padding: 16px;
+            margin-top: 20px;
+            border-radius: 10px;
+            font-size: 18px;
+            background: #2575fc;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        button:hover {
+            background: #6a11cb;
+        }
+
+        button:active {
+            transform: scale(0.98);
+        }
+
+        .result-text {
+            margin-top: 20px;
+            font-size: 16px;
+            color: #666;
+        }
+
+        .result-box {
+            background: #f9f9f9;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 30px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            font-size: 16px;
+            color: #333;
+            white-space: pre-wrap;
+            text-align: left;
+        }
+
+        .query-section {
+            margin-top: 40px;
+        }
+
+        .query-section input {
+            width: calc(100% - 40px);
+            display: inline-block;
+            padding: 14px;
+            margin-right: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+        }
+
+        .query-section button {
+            width: auto;
+            display: inline-block;
+            font-size: 18px;
+            padding: 14px;
+            margin-left: 10px;
+            background: #6a11cb;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        .query-section button:hover {
+            background: #2575fc;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>Upload File to S3</h2>
+        <div class="input-group">
+            <input type="file" id="fileInput">
+            <button onclick="uploadFile()">Upload</button>
+            <p id="uploadResult" class="result-text"></p>
+        </div>
+
+        <div class="query-section">
+            <h2>Enter Query</h2>
+            <div class="input-group">
+                <input type="text" id="queryInput" placeholder="Enter your query">
+                <button onclick="processFile()">Process</button>
+            </div>
+        </div>
+
+        <!-- Result Box -->
+        <div id="responseBox" class="result-box" style="display:none;">
+            <h3>Query Result:</h3>
+            <p id="responseResult"></p>
+        </div>
+    </div>
+
+    <script>
+        async function uploadFile() {
+            let fileInput = document.getElementById("fileInput").files[0];
+            if (!fileInput) {
+                alert("Please select a file to upload.");
+                return;
+            }
+
+            let formData = new FormData();
+            formData.append("file", fileInput);
+
+            try {
+                let response = await fetch("http://127.0.0.1:5000/upload", {
+                    method: "POST",
+                    body: formData
+                });
+                let result = await response.json();
+                document.getElementById("uploadResult").innerText = result.message || result.error;
+            } catch (error) {
+                document.getElementById("uploadResult").innerText = "Error uploading file.";
+            }
+        }
+
+        async function processFile() {
+            let fileInput = document.getElementById("fileInput").files[0];
+            let query = document.getElementById("queryInput").value;
+            if (!fileInput || !query) {
+                alert("Please select a file and enter a query.");
+                return;
+            }
+
+            let formData = new FormData();
+            formData.append("file_url", `https://filereaderflask.s3.us-east-1.amazonaws.com/${fileInput.name}`);
+            formData.append("query", query);
+
+            try {
+                let response = await fetch("http://127.0.0.1:5000/process_file", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        file_url: `https://filereaderflask.s3.us-east-1.amazonaws.com/${fileInput.name}`,
+                        query: query
+                    })
+                });
+                let result = await response.json();
+                document.getElementById("responseBox").style.display = "block";
+                document.getElementById("responseResult").innerText = result.response || result.error;
+            } catch (error) {
+                document.getElementById("responseBox").style.display = "block";
+                document.getElementById("responseResult").innerText = "Error processing file.";
+            }
+        }
+    </script>
+
+</body>
+</html>

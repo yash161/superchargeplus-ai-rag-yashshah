@@ -1,0 +1,225 @@
+
+\documentclass[a4paper,10pt]{article}
+\usepackage{helvet}
+\renewcommand{\familydefault}{\sfdefault}
+%---------------------------------------------------------------------------------------- 
+% FONT
+%---------------------------------------------------------------------------------------- 
+% 
+% fontspec allows you to use TTF/OTF fonts directly
+% \usepackage{fontspec}
+% \defaultfontfeatures{Ligatures=TeX}
+% 
+% modified for ShareLaTeX use
+% \setmainfont[
+% SmallCapsFont = Fontin-SmallCaps.otf,
+% BoldFont = Fontin-Bold.otf,
+% ItalicFont = Fontin-Italic.otf
+% ]
+% {Fontin.otf}
+
+%---------------------------------------------------------------------------------------- 
+% PACKAGES
+%---------------------------------------------------------------------------------------- 
+\usepackage{url}
+\usepackage{parskip} %other packages for formatting
+\RequirePackage{color}
+\RequirePackage{graphicx}
+\usepackage[usenames,dvipsnames]{xcolor}
+\usepackage[scale=0.9, top=.1in, bottom=.1in]{geometry}
+
+%tabularx environment
+\usepackage{tabularx}
+
+%for lists within experience section
+\usepackage{enumitem}
+
+% centered version of 'X' col. type
+\newcolumntype{C}{>{\centering\arraybackslash}X}
+
+%to prevent spillover of tabular into next pages
+\usepackage{supertabular}
+\usepackage{tabularx}
+\newlength{\fullcollw}
+\setlength{\fullcollw}{0.47\textwidth}
+
+%custom \section
+\usepackage{titlesec} 
+\usepackage{multicol}
+\usepackage{multirow}
+
+%CV Sections inspired by: 
+%http://stefano.italians.nl/archives/26
+\titleformat{\section}{\Large\scshape\raggedright}{}{0em}{}[\titlerule]
+\titlespacing{\section}{0pt}{5.25pt}{5.25pt}
+
+%for publications
+\usepackage[style=authoryear,sorting=ynt, maxbibnames=2]{biblatex}
+
+%Setup hyperref package, and colours for links
+\usepackage[unicode, draft=false]{hyperref}
+\definecolor{linkcolour}{rgb}{0,0.2,0.6}
+\hypersetup{colorlinks,breaklinks,urlcolor=linkcolour,linkcolor=linkcolour}
+
+\addbibresource{citations.bib}
+\setlength\bibitemsep{1em}
+
+%for social icons
+\usepackage{fontawesome5}
+
+%debug page outer frames
+%\usepackage{showframe}
+
+%---------------------------------------------------------------------------------------- 
+% BEGIN DOCUMENT
+%---------------------------------------------------------------------------------------- 
+\begin{document}
+
+% non-numbered pages
+\pagestyle{empty}
+
+%---------------------------------------------------------------------------------------- 
+% TITLE
+%---------------------------------------------------------------------------------------- 
+\begin{tabularx}{\linewidth}{@{} C @{}}\\
+\Huge{Yash Shah} \\[2pt]
+\href{https://github.com/yash161}{\raisebox{-0.05\height}\faGithub\ yash161} \ $|$ 
+\href{https://www.linkedin.com/in/yash-shah-b7129b1bb/}{\raisebox{-0.05\height}\faLinkedin\ yash-shah} \ $|$ \ 
+\href{mailto:yashshah3698@gmail.com}{\raisebox{-0.05\height}\faEnvelope \ yashshah3698@gmail.com} \ $|$ \ 
+\href{tel:+12133018249}{\raisebox{-0.05\height}\faMobile \ 2133018249} \ $|$ \ 
+\href{https://portfolio-two-liard-51.vercel.app/}{\raisebox{-0.05\height}\faLink \ Portfolio} \ $|$ \ 
+\raisebox{-0.05\height}\faMapMarker \ los angeles \\
+\end{tabularx}
+
+
+%---------------------------------------------------------------------------------------- 
+% EXPERIENCE SECTIONS
+%---------------------------------------------------------------------------------------- 
+\section{Education}
+\begin{tabularx}{\linewidth}{ @{}l r@{} }
+\color[HTML]{1C033C} \textbf{California State University, Los Angeles, United States} & \hfill \color[HTML]{371e77} August 2024 - August 2026 \\
+\color[HTML]{371e77} M.S. in Computer Science & \hfill \color[HTML]{4B28A4} \textit{\textbf{CGPA: 4/4}} \\
+\multicolumn{2}{@{}X@{}}{Relevant Coursework: Advanced AI, Advanced Software Engineering, Computer and Network Security}
+\end{tabularx}
+
+\setlength{\parskip}{2pt}
+
+\begin{tabularx}{\linewidth}{ @{}l r@{} }
+\color[HTML]{1C033C} \textbf{Ganpat University, Gujarat, India} & \hfill \color[HTML]{371e77} July 2019 - June 2023 \\
+\color[HTML]{371e77} B.Tech. in Computer Science \& Engineering (Cloud-Based Applications) & \hfill \color[HTML]{4B28A4} \textit{\textbf{CGPA: 8.99/10}} \\
+\multicolumn{2}{@{}X@{}}{Relevant Coursework: Cloud Computing, Machine Learning, Cloud Security, Data Mining \& Warehousing, Software Engineering, Computer Networks, Algorithm Design, Microservices, Virtualization, Operating Systems, DBMS, Data Structures, Compiler Design, IT Infrastructure Management, Web App Development}
+\end{tabularx}
+
+
+
+\section{Work Experience}
+\begin{tabularx}{\linewidth}{@{}l r@{}}
+\textbf{MLOps Graduate Assistant, California State University, Los Angeles, CA} \hfill \color[HTML]{371e77} Sep 2024 - Present \\[1pt]
+\color[HTML]{371e77}\textbf{\textit{AI-Based Book Recommendation System: AWS, Gemini API, Machine Learning}} \\[1pt]
+\begin{minipage}[t]{\linewidth}
+\begin{itemize}[nosep, after=\strut, leftmargin=2em]
+\item \textbf{Developed automated testing scripts} in Python and AWS, enhancing predictive modeling for the recommendation system by 25\%.
+\item \textbf{Integrated Gemini API} for seamless data integration while optimizing the cloud computing platform's availability.
+\item \textbf{Collaborated with software engineers} to design efficient pipelines, ensuring robust and scalable machine learning applications.
+\end{itemize}
+\end{minipage}
+\end{tabularx}
+
+\begin{tabularx}{\linewidth}{@{}l r@{}}
+\textbf{Squadron Technology, Ahmedabad} \hfill \color[HTML]{371e77} May 2023 - July 2024 \\[1pt]
+\color[HTML]{371e77}\textbf{\textit{Cloud Data and DevOps Engineer}} \\[1pt]
+\begin{minipage}[t]{\linewidth}
+\begin{itemize}[nosep, after=\strut, leftmargin=2em]
+\item \textbf{Built CI/CD pipelines} in Azure DevOps for reliable cloud infrastructure deployment.
+\item \textbf{Optimized data retrieval} and deployment using Docker on AWS for scalability.
+\item \textbf{Automated infrastructure} with Terraform to streamline provisioning and configuration.
+\item \textbf{Enhanced Kubernetes deployment} for managing and scaling containerized applications.
+\end{itemize}
+\end{minipage}
+\end{tabularx}
+
+
+\begin{tabularx}{\linewidth}{@{}l r@{}}
+\textbf{Squadron Technology, Ahmedabad} \hfill \color[HTML]{371e77} Jan 2023 - May 2023 \\[1pt]
+\color[HTML]{371e77}\textbf{\textit{Cloud Data and DevOps Intern}} \\[1pt]
+\begin{minipage}[t]{\linewidth}
+\begin{itemize}[nosep, after=\strut, leftmargin=2em]
+\item \textbf{Automated monitoring tasks} using PowerShell and Python, improving operational insight and data accuracy significantly.
+\item \textbf{Developed scalable serverless solutions} with AWS Lambda and Ansible, streamlining CI/CD workflows for efficient deployment.
+\end{itemize}
+\end{minipage}
+\end{tabularx}
+
+
+
+\section{Project Work}
+\begin{tabularx}{\linewidth}{@{}l r@{}}
+\begin{minipage}[t]{\linewidth}
+\begin{itemize}[nosep,after=\strut, leftmargin=2em]
+\item \textbf{\href{https://github.com/yash161/Acten3_Etl}{Acten3 ETL Pipeline Development (Jan 2024 – Mar 2024): Python, Azure}} \\ 
+Developed a cloud-based ETL pipeline utilizing Python for data extraction and transformation, deploying on Microsoft Azure. I designed and implemented this scalable solution integrating real-time analytics and automated data validation, leading to improved data quality and processing efficiency. The project enhanced system reliability and facilitated faster, more reliable analytics for stakeholders.
+\end{itemize}
+\end{minipage}
+\end{tabularx}
+
+\begin{tabularx}{\linewidth}{@{}l r@{}}
+\begin{minipage}[t]{\linewidth}
+\begin{itemize}[nosep,after=\strut, leftmargin=2em]
+\item \textbf{\href{https://github.com/yash161/Scrapper}{Web Scraper Optimization and Deployment on Docker (Jan 2023 – Mar 2023): Python, SQL, Terraform}} \\ 
+Enhanced a Python web scraper to increase data collection speed by 40\%, integrating SQL for efficient data storage. I deployed the solution in Docker containers for scalability and utilized Terraform for automated provisioning of cloud infrastructure, enabling the application to reliably handle large-scale data collection in a hybrid cloud environment.
+\end{itemize}
+\end{minipage}
+\end{tabularx}
+
+\begin{tabularx}{\linewidth}{@{}l r@{}}
+\begin{minipage}[t]{\linewidth}
+\begin{itemize}[nosep,after=\strut, leftmargin=2em]
+\item \textbf{\href{https://github.com/yash161/aws-snowflake-data-pipeline}{AWS Data Pipeline Automation (Jan 2023 -- Mar 2023): Step Functions, Snowflake}} \\ 
+Automated the migration of 500GB of data from SQL Server to Snowflake using AWS Step Functions for orchestration, enhancing transfer speed by 20\%. I integrated CI/CD pipelines to streamline deployments and improve overall operational efficiency, reinforcing cloud-based data management practices.
+\end{itemize}
+\end{minipage}
+\end{tabularx}
+
+\begin{tabularx}{\linewidth}{@{}l r@{}}
+\begin{minipage}[t]{\linewidth}
+\begin{itemize}[nosep,after=\strut, leftmargin=2em]
+\item \textbf{\href{https://github.com/yash161/SaaS_Tool}{SQOR GitLab CI/CD (Mar 2023 - Jun 2023): Azure, GitLab, Jupyter}} \\ 
+Streamlined a SaaS deployment pipeline by implementing GitLab CI/CD practices, which reduced deployment time and enhanced system reliability. I integrated this setup with Azure to ensure high availability and minimize downtime, resulting in efficient application deployments and overall operational improvements.
+\end{itemize}
+\end{minipage}
+\end{tabularx}
+
+
+
+
+
+\section{Skills}
+\begin{tabularx}{\linewidth}{@{}l r@{}}
+\begin{minipage}[t]{\linewidth}
+\begin{itemize}[nosep,after=\strut,leftmargin=2em]
+\item\textbf{Programming Languages \& Tools:} Python, GoLang, REST, Azure DevOps
+\item\textbf{Technologies:} Cloud Computing (AWS, GCP, Microsoft Azure), CI/CD, Kubernetes, Terraform
+\item\textbf{Software Development:} Coding, Testing, Debugging, Software Design, Data Structures
+\item\textbf{Collaboration Skills:} Proficient in troubleshooting, working with team members and clients to produce excellence.
+\end{itemize}
+\end{minipage}
+\end{tabularx}
+
+
+
+
+%---------------------------------------------------------------------------------------- 
+% PUBLICATIONS
+%---------------------------------------------------------------------------------------- 
+\section{Achievements}
+\begin{tabularx}{\linewidth}{@{}l r@{}}
+\begin{minipage}[t]{\linewidth}
+\begin{itemize}[nosep,after=\strut, leftmargin=2em]
+\item Proficient in Python, GoLang, AWS, Azure, GCP, Kubernetes, CI/CD, and Terraform (Associate 003).
+\item Skilled in RESTful API design, debugging, YAML, Bash, Docker, and DevOps tools for cloud infrastructure.
+\end{itemize}
+\end{minipage}
+\end{tabularx}
+
+
+\end{document}
