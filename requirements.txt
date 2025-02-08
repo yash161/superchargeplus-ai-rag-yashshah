@@ -3,7 +3,6 @@ boto3
 pandas
 PyMuPDF
 faiss-cpu
-setuptools
 numpy
 requests
 python-docx
