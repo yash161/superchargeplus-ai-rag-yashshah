@@ -1,5 +1,5 @@
 setuptools
-# boto3==1.26.1
+boto3==1.26.1
 # pandas==1.5.3
 # PyMuPDF==1.19.6  # fitz is PyMuPDF
 # faiss-cpu==1.7.4  # for CPU version of Faiss, use faiss-gpu for GPU version
