@@ -8,7 +8,7 @@ import numpy as np
 import requests
 from flask import Flask, request, jsonify, render_template
 from docx import Document
-from sentence_transformers import SentenceTransformer
+# from sentence_transformers import SentenceTransformer
 from llama_index.embeddings.gemini import GeminiEmbedding
 import textwrap
 # Initialize Flask app
