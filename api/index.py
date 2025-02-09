@@ -175,31 +175,49 @@ def generate_response(api_key, retrieved_docs, query):
 def index():
     """Render the index page."""
     return render_template("index.html")
-
+import traceback
 
 @app.route("/upload", methods=["POST"])
+
+
 def upload_file():
     """Upload a file to S3."""
     print("Received request to upload file")
 
+    # Check if file is part of the request
     if "file" not in request.files:
-        print("Error: No file provided in the request")
-        return jsonify({"error": "No file provided"}), 400
+        error_message = "No file provided in the request"
+        print(f"Error: {error_message}")
+        return jsonify({"error": error_message}), 400
 
     file = request.files["file"]
     print(f"File received: {file.filename}")
+    print(f"File size: {len(file.read())} bytes")
+    file.seek(0)  # Reset the file pointer after reading its size
 
     try:
         print(f"Uploading {file.filename} to S3 bucket {S3_BUCKET} in region {S3_REGION}...")
-        s3.upload_fileobj(file, S3_BUCKET, file.filename)
         
+        # Attempt to upload file to S3
+        s3.upload_fileobj(file, S3_BUCKET, file.filename)
+
+        # Build file URL for successful upload
         file_url = f"https://{S3_BUCKET}.s3.{S3_REGION}.amazonaws.com/{file.filename}"
         print(f"File uploaded successfully: {file_url}")
 
         return jsonify({"message": "File uploaded successfully", "file_url": file_url}), 200
+
     except Exception as e:
-        print(f"Error uploading file: {str(e)}")
-        return jsonify({"error": str(e)}), 500
+        # Log detailed error information
+        error_message = f"Error uploading file: {str(e)}"
+        print(error_message)
+        
+        # Optionally print stack trace for debugging purposes
+        print("Stack Trace:")
+        traceback.print_exc()
+
+        # Return a detailed error message in the response
+        return jsonify({"error": error_message, "details": traceback.format_exc()}), 500
 
 
 
