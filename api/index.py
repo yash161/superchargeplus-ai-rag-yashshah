@@ -180,16 +180,27 @@ def index():
 @app.route("/upload", methods=["POST"])
 def upload_file():
     """Upload a file to S3."""
+    print("Received request to upload file")
+
     if "file" not in request.files:
+        print("Error: No file provided in the request")
         return jsonify({"error": "No file provided"}), 400
 
     file = request.files["file"]
+    print(f"File received: {file.filename}")
+
     try:
+        print(f"Uploading {file.filename} to S3 bucket {S3_BUCKET} in region {S3_REGION}...")
         s3.upload_fileobj(file, S3_BUCKET, file.filename)
+        
         file_url = f"https://{S3_BUCKET}.s3.{S3_REGION}.amazonaws.com/{file.filename}"
+        print(f"File uploaded successfully: {file_url}")
+
         return jsonify({"message": "File uploaded successfully", "file_url": file_url}), 200
     except Exception as e:
+        print(f"Error uploading file: {str(e)}")
         return jsonify({"error": str(e)}), 500
+
 
 
 @app.route("/process_file", methods=["POST"])
@@ -251,4 +262,5 @@ def process_file():
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(host='0.0.0.0', debug=True)
+
