@@ -13,7 +13,7 @@ from llama_index.embeddings.gemini import GeminiEmbedding
 import textwrap
 # Initialize Flask app
 app = Flask(__name__, template_folder="templates")
-
+app.config['ALLOWED_HOSTS'] = ['44.202.110.217', 'localhost', '0.0.0.0']
 # S3 Configurations
 S3_BUCKET = "filereaderflask"
 S3_REGION = "us-east-1"
