@@ -178,8 +178,6 @@ def index():
 import traceback
 
 @app.route("/upload", methods=["POST"])
-
-
 def upload_file():
     """Upload a file to S3."""
     print("Received request to upload file")
