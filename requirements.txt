@@ -1,11 +1,12 @@
-boto3==1.26.1
-pandas==1.5.3
-PyMuPDF==1.19.6  # fitz is PyMuPDF
-faiss-cpu==1.7.4  # for CPU version of Faiss, use faiss-gpu for GPU version
-numpy==1.24.1
-requests==2.26.0
-flask==2.2.3
-python-docx==0.8.11  # for working with .docx files
-sentence-transformers==2.2.2
-llama-index==0.5.7  # Ensure compatibility with GeminiEmbedding
-textwrap  # Standard library (no need to include in requirements)
+setuptools
+# boto3==1.26.1
+# pandas==1.5.3
+# PyMuPDF==1.19.6  # fitz is PyMuPDF
+# faiss-cpu==1.7.4  # for CPU version of Faiss, use faiss-gpu for GPU version
+# numpy==1.24.1
+# requests==2.26.0
+# flask==2.2.3
+# python-docx==0.8.11  # for working with .docx files
+# sentence-transformers==2.2.2
+# llama-index==0.5.7  # Ensure compatibility with GeminiEmbedding
+# textwrap  # Standard library (no need to include in requirements)
