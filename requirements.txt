@@ -1,9 +1,9 @@
 setuptools
 boto3==1.26.1
 pandas==2.2.3
-# PyMuPDF==1.19.6  # fitz is PyMuPDF
-# faiss-cpu==1.7.4  # for CPU version of Faiss, use faiss-gpu for GPU version
-# numpy==1.24.1
+PyMuPDF==1.25.3  # fitz is PyMuPDF
+faiss-cpu==1.10.0  # for CPU version of Faiss, use faiss-gpu for GPU version
+numpy==2.2.2
 # requests==2.26.0
 # flask==2.2.3
 # python-docx==0.8.11  # for working with .docx files
