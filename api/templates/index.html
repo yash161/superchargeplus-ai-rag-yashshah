@@ -161,7 +161,7 @@
             formData.append("file", fileInput);
 
             try {
-                let response = await fetch("http://127.0.0.1:5000/upload", {
+                let response = await fetch("http://44.202.110.217:5000/upload", {
                     method: "POST",
                     body: formData
                 });
@@ -185,7 +185,7 @@
             formData.append("query", query);
 
             try {
-                let response = await fetch("http://127.0.0.1:5000/process_file", {
+                let response = await fetch("http://44.202.110.217:5000/process_file", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json"

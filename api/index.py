@@ -29,7 +29,7 @@ s3 = boto3.client(
 )
 
 # Gemini API Key
-API_KEY = "AIzaSyAz5yI_TC8XYoHWDp1OIMpnGCIKg2jqOVU"  # Move this to env variables in production
+API_KEY = "AIzaSyCVvXQwZtnJJqQHcq0vR-dC1QOdl4WjcRQ"  # Move this to env variables in production
 # API_KEY = "a2acc367-5005-4c0c-8193-65ad2a351877"
 
 def initialize_embedding_model(api_key: str, model_name: str = "models/embedding-001"):
