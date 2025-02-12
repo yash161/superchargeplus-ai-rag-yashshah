@@ -25,7 +25,7 @@ This project is a web application built with Flask that allows users to upload v
 
 To run this project locally, ensure you have the following:
 
-- Python 3.x
+- Python 3.12
 - Flask
 - Boto3
 - FAISS
@@ -47,34 +47,77 @@ To run this project locally, ensure you have the following:
     cd superchargeplus-ai-rag-yashshah
     ```
 
-3. Create and activate a virtual environment:
+3. Create a virtual environment:
+
+    - On Windows:
+      ```bash
+      python -m venv venv
+      ```
+
+    - On macOS/Linux:
+      ```bash
+      python3 -m venv venv
+      ```
+
+4. Activate the virtual environment:
 
     - On Windows:
       ```bash
       source venv/Scripts/activate
       ```
+
     - On macOS/Linux:
       ```bash
       source venv/bin/activate
       ```
 
-4. Install the required dependencies:
+5. Install the required dependencies:
 
     ```bash
     pip install -r requirements.txt
     ```
 
-5. Set up AWS credentials for S3 access:
+6. Set up AWS credentials for S3 access:
 
     - Add your `AWS_ACCESS_KEY` and `AWS_SECRET_KEY` to the environment variables or use an AWS credentials file.
 
-6. Run the Flask application:
+7. Run the Flask application:
 
     ```bash
     python app.py
     ```
 
-7. The app will be running at `http://127.0.0.1:5000/`.
+8. The app will be running at `http://127.0.0.1:5000/`.
+
+## Scalability & Optimization
+
+One of the key focuses of this project is its scalability and optimization to handle large numbers of document uploads and queries effectively. Here's how these factors are addressed:
+
+- **Scalable Cloud Hosting**: The project is hosted on an EC2 Linux instance, enabling easy scaling. While the instance has been stopped due to cost considerations, it can be restarted anytime based on user requirements. The project is designed to scale horizontally, making it capable of handling multiple concurrent users.
+  
+- **S3 Integration**: By leveraging AWS S3 for file storage, multiple documents can be uploaded, stored, and processed without impacting performance. This allows the system to manage large volumes of data efficiently, while ensuring easy retrieval and processing of files.
+
+- **Efficient Similarity Search with FAISS**: FAISS is used for fast and optimized similarity search. Its high-performance indexing allows the system to handle large datasets and return relevant results quickly, even with multiple document uploads.
+
+- **Optimized API Calls**: The Gemini API integration is optimized to minimize unnecessary calls and ensure that embedding generation is fast and reliable, supporting the overall system’s efficiency.
+
+## Creativity & Problem-Solving
+
+This project showcases creativity and problem-solving across several areas:
+
+- **Multi-format Document Processing**: Handling different file formats (PDF, TXT, CSV, JSON, DOCX) in a seamless manner required creative approaches to text extraction, such as using PyMuPDF for PDFs and python-docx for DOCX files. The system adapts flexibly to various document types, making it versatile for real-world usage.
+
+- **Embedding Generation & Similarity Search**: One of the main challenges was ensuring that the system could understand and retrieve relevant information from documents. By integrating the Gemini API for embedding generation and using FAISS for similarity searches, the system is capable of providing highly relevant answers to user queries, based on the content of uploaded documents.
+
+- **API Integration with AWS**: Solving the problem of scalable file storage was achieved using AWS S3, allowing for secure and efficient document uploads. Coupled with EC2 hosting, this solution provides a robust cloud-based system that can be easily scaled up when needed.
+
+- **Optimizing User Experience**: The interface has been designed to be user-friendly, with clear instructions for uploading and processing files. The focus on simplicity helps reduce friction for users, ensuring that they can quickly upload documents and get answers without facing technical hurdles.
+
+## Hosting
+
+The project is hosted on an EC2 Linux instance, but it has been stopped due to cost considerations. If you'd like to check it out, please let me know, and I will start the instance for you. The project is fully scalable, and the EC2 instance can be restarted as needed to accommodate more users. 
+
+Additionally, the files are uploaded to an S3 bucket, allowing for multiple documents to be uploaded and processed concurrently without affecting performance.
 
 ## API Endpoints
 
@@ -113,7 +156,3 @@ To run this project locally, ensure you have the following:
 3. Commit your changes (`git commit -am 'Add feature'`).
 4. Push to the branch (`git push origin feature-branch`).
 5. Create a new Pull Request.
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
