@@ -1,208 +1,235 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SuperChargePlus AI RAG System</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SuperChargePlus AI RAG System</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap"
+    rel="stylesheet"
+  />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-        body {
-            font-family: 'Poppins', sans-serif;
-            background-color: #f4f7fc;
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
+    body {
+      font-family: "Poppins", sans-serif;
+      background-color: #f4f7fc;
+      margin: 0;
+      padding: 20px;
+      min-height: 100vh;
+    }
 
-        .container {
-            background: #ffffff;
-            width: 100%;
-            max-width: 700px;
-            border-radius: 15px;
-            padding: 50px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            text-align: center;
-            border: 1px solid #e1e6f4;
-        }
+    .container {
+      background: #ffffff;
+      width: 100%;
+      max-width: 700px;
+      margin: 0 auto;
+      border-radius: 15px;
+      padding: 50px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      border: 1px solid #e1e6f4;
+    }
 
-        h2 {
-            font-size: 32px;
-            font-weight: 600;
-            color: #4a4a4a;
-            margin-bottom: 30px;
-            text-transform: uppercase;
-        }
+    h2 {
+      font-size: 32px;
+      font-weight: 600;
+      color: #4a4a4a;
+      margin-bottom: 30px;
+      text-transform: uppercase;
+    }
 
-        .input-group {
-            margin-bottom: 30px;
-            text-align: left;
-        }
+    .input-group {
+      margin-bottom: 30px;
+      text-align: left;
+    }
 
-        input[type="file"], input[type="text"] {
-            width: 100%;
-            padding: 18px;
-            border-radius: 10px;
-            border: 1px solid #ccc;
-            font-size: 16px;
-            background-color: #fafafa;
-            transition: 0.3s ease;
-        }
+    input[type="file"],
+    input[type="text"] {
+      width: 100%;
+      padding: 18px;
+      border-radius: 10px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+      background-color: #fafafa;
+      transition: 0.3s ease;
+    }
 
-        input[type="file"]:hover, input[type="text"]:hover {
-            border-color: #4a90e2;
-            background-color: #f2f7ff;
-        }
+    input[type="file"]:hover,
+    input[type="text"]:hover {
+      border-color: #4a90e2;
+      background-color: #f2f7ff;
+    }
 
-        button {
-            width: 100%;
-            padding: 16px;
-            margin-top: 20px;
-            border-radius: 10px;
-            font-size: 18px;
-            background: #4a90e2;
-            color: white;
-            border: none;
-            cursor: pointer;
-            transition: background 0.3s ease, transform 0.2s ease;
-        }
+    button {
+      width: 100%;
+      padding: 16px;
+      margin-top: 20px;
+      border-radius: 10px;
+      font-size: 18px;
+      background: #4a90e2;
+      color: white;
+      border: none;
+      cursor: pointer;
+      transition: background 0.3s ease, transform 0.2s ease;
+    }
 
-        button:hover {
-            background: #357ab7;
-        }
+    button:hover {
+      background: #357ab7;
+    }
 
-        button:active {
-            transform: scale(0.98);
-        }
+    button:active {
+      transform: scale(0.98);
+    }
 
-        .result-box {
-            background: #f9fafb;
-            border-radius: 10px;
-            padding: 20px;
-            margin-top: 30px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            font-size: 16px;
-            color: #333;
-            text-align: left;
-            display: none;
-        }
+    .result-box {
+      background: #f9fafb;
+      border-radius: 10px;
+      padding: 20px;
+      margin-top: 30px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      font-size: 16px;
+      color: #333;
+      text-align: left;
+      display: none;
+    }
 
-        .result-box h4 {
-            font-size: 20px;
-            font-weight: 500;
-            margin-bottom: 15px;
-            color: #333;
-        }
+    .result-box h4 {
+      font-size: 20px;
+      font-weight: 500;
+      margin-bottom: 15px;
+      color: #333;
+    }
 
-        .result-text {
-            color: #666;
-            font-size: 14px;
-        }
+    .result-text {
+      color: #666;
+      font-size: 14px;
+    }
 
-        .query-section {
-            margin-top: 20px;
-        }
+    .query-section {
+      margin-top: 20px;
+    }
 
-        .query-section input {
-            width: calc(100% - 20px);
-            display: inline-block;
-            padding: 16px;
-            margin-right: 10px;
-            border-radius: 10px;
-            border: 1px solid #ccc;
-            transition: 0.3s ease;
-        }
+    .query-section input {
+      width: calc(100% - 20px);
+      display: inline-block;
+      padding: 16px;
+      margin-right: 10px;
+      border-radius: 10px;
+      border: 1px solid #ccc;
+      transition: 0.3s ease;
+    }
 
-        .query-section input:hover {
-            border-color: #4a90e2;
-            background-color: #f2f7ff;
-        }
-
-    </style>
+    .query-section input:hover {
+      border-color: #4a90e2;
+      background-color: #f2f7ff;
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <h2>SuperChargePlus AI RAG System</h2>
-        <div class="input-group">
-            <input type="file" id="fileInput">
-            <button onclick="uploadFile()">Upload File</button>
-            <p id="uploadResult" class="result-text"></p>
-        </div>
+  <div class="container">
+    <h2>SuperChargePlus AI RAG System</h2>
 
-        <div class="query-section">
-            <h3>Enter Query</h3>
-            <div class="input-group">
-                <input type="text" id="queryInput" placeholder="Enter your query">
-                <button onclick="processFile()">Process Query</button>
-            </div>
-        </div>
-
-        <div id="responseBox" class="result-box">
-            <h4>Query Result:</h4>
-            <p id="responseResult"></p>
-        </div>
+    <!-- File Upload Section -->
+    <div class="input-group">
+      <input type="file" id="fileInput" />
+      <button onclick="uploadFile()">Upload File</button>
+      <p id="uploadResult" class="result-text"></p>
     </div>
 
-    <script>
-        // Automatically detect the backend URL
-        const backendUrl = `${window.location.protocol}//${window.location.hostname}:${window.location.port || "8000"}`;
+    <!-- Query Section -->
+    <div class="query-section">
+      <h3>Enter Query</h3>
+      <div class="input-group">
+        <input type="text" id="queryInput" placeholder="Enter your query" />
+        <button onclick="processFile()">Process Query</button>
+      </div>
+    </div>
 
-        async function uploadFile() {
-            let fileInput = document.getElementById("fileInput").files[0];
-            if (!fileInput) {
-                alert("Please select a file to upload.");
-                return;
-            }
+    <!-- Result Section -->
+    <div id="responseBox" class="result-box">
+      <h4>Query Result:</h4>
+      <p id="responseResult"></p>
+    </div>
+  </div>
 
-            let formData = new FormData();
-            formData.append("file", fileInput);
+  <script>
+    // We'll store the uploaded file URL here so we can do multiple queries without re-upload
+    let uploadedFileUrl = "";
 
-            try {
-                let response = await fetch(`${backendUrl}/upload`, {
-                    method: "POST",
-                    body: formData
-                });
-                let result = await response.json();
-                document.getElementById("uploadResult").innerText = result.message || result.error;
-            } catch (error) {
-                document.getElementById("uploadResult").innerText = "Error uploading file.";
-            }
+    async function uploadFile() {
+      const fileInput = document.getElementById("fileInput").files[0];
+      if (!fileInput) {
+        alert("Please select a file to upload.");
+        return;
+      }
+      
+      // Build the S3 URL or handle your backend logic for file uploads
+      // For example, if your backend returns a file_url in the JSON response, use that
+      const backendUrl = `${window.location.protocol}//${window.location.hostname}`;
+      let formData = new FormData();
+      formData.append("file", fileInput);
+
+      try {
+        let response = await fetch(`${backendUrl}/upload`, {
+          method: "POST",
+          body: formData,
+        });
+        let result = await response.json();
+        
+        // Check if upload was successful
+        if (result.message) {
+          document.getElementById("uploadResult").innerText = result.message;
+          // If your server or S3 link is consistent, store the file URL
+          // For instance, we can assume:
+          uploadedFileUrl = `https://filereaderflask.s3.us-east-1.amazonaws.com/${fileInput.name}`;
+        } else {
+          document.getElementById("uploadResult").innerText = result.error || "Upload error.";
         }
+      } catch (error) {
+        document.getElementById("uploadResult").innerText = "Error uploading file.";
+      }
+    }
 
-        async function processFile() {
-            let fileInput = document.getElementById("fileInput").files[0];
-            let query = document.getElementById("queryInput").value;
-            if (!fileInput || !query) {
-                alert("Please select a file and enter a query.");
-                return;
-            }
+    async function processFile() {
+    let fileInput = document.getElementById("fileInput").files[0];
+    let query = document.getElementById("queryInput").value;
+    if (!fileInput || !query) {
+        alert("Please select a file and enter a query.");
+        return;
+    }
 
-            try {
-                let response = await fetch(`${backendUrl}/process_file`, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify({
-                        file_url: `https://filereaderflask.s3.us-east-1.amazonaws.com/${fileInput.name}`,
-                        query: query
-                    })
-                });
-                let result = await response.json();
-                document.getElementById("responseBox").style.display = "block";
-                document.getElementById("responseResult").innerText = result.response || result.error;
-            } catch (error) {
-                document.getElementById("responseBox").style.display = "block";
-                document.getElementById("responseResult").innerText = "Error processing file.";
-            }
-        }
-    </script>
+    try {
+        const backendUrl = `${window.location.protocol}//${window.location.hostname}`;
+        let response = await fetch(`${backendUrl}/process_file`, { 
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                file_url: `https://filereaderflask.s3.us-east-1.amazonaws.com/${fileInput.name}`,
+                query: query
+            })
+        });
+        
+        let result = await response.json();
+        document.getElementById("responseBox").style.display = "block";
+        document.getElementById("responseResult").innerText = result.response || result.error;
+        
+        // Alternative method to scroll to the top
+        document.body.scrollTop = 0; // For Safari
+        document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE, and Opera
+
+    } catch (error) {
+        document.getElementById("responseBox").style.display = "block";
+        document.getElementById("responseResult").innerText = "Error processing file.";
+    }
+}
+
+  </script>
 </body>
 </html>

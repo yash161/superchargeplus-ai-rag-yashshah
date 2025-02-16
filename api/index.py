@@ -2,7 +2,7 @@ import os
 import json
 import time
 from concurrent.futures import ThreadPoolExecutor
-
+from flask_cors import CORS
 import boto3
 import pandas as pd
 import fitz  # PyMuPDF
@@ -18,7 +18,8 @@ from llama_index.embeddings.gemini import GeminiEmbedding
 import textwrap
 # Initialize Flask app
 app = Flask(__name__, template_folder="templates")
-app.config['ALLOWED_HOSTS'] = ['44.202.110.217', 'localhost', '0.0.0.0']
+app.config['ALLOWED_HOSTS'] = ['*']
+app.config['MAX_CONTENT_LENGTH'] = 50 * 1024 * 1024
 # S3 Configurations
 S3_BUCKET = "filereaderflask"
 S3_REGION = "us-east-1"
@@ -32,6 +33,7 @@ s3 = boto3.client(
     aws_secret_access_key=AWS_SECRET_KEY,
     region_name=S3_REGION
 )
+CORS(app, resources={r"/*": {"origins": "*"}})
 
 # Gemini API Key
 API_KEY = "AIzaSyCVvXQwZtnJJqQHcq0vR-dC1QOdl4WjcRQ"  # Move this to env variables in production
@@ -297,5 +299,6 @@ def process_file():
 
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', debug=True)
+    app.run(host='0.0.0.0', port=8000, debug=True)
+
 
