@@ -1,0 +1,10 @@
+boto3
+pandas
+PyMuPDF
+faiss-cpu
+numpy
+requests
+flask
+python-docx
+llama-index
+llama-index-embeddings-gemini
