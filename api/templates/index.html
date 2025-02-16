@@ -14,66 +14,68 @@
 
         body {
             font-family: 'Poppins', sans-serif;
-            background-color: #fdfdfd;
+            background-color: #f4f7fc;
             height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            color: #333;
+            padding: 20px;
         }
 
         .container {
-            background: white;
+            background: #ffffff;
             width: 100%;
-            max-width: 600px;
+            max-width: 700px;
             border-radius: 15px;
-            padding: 35px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            padding: 50px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
             text-align: center;
+            border: 1px solid #e1e6f4;
         }
 
         h2 {
-            font-size: 26px;
+            font-size: 32px;
             font-weight: 600;
-            margin-bottom: 25px;
-            color: #222;
+            color: #4a4a4a;
+            margin-bottom: 30px;
+            text-transform: uppercase;
         }
 
         .input-group {
-            margin-bottom: 20px;
+            margin-bottom: 30px;
             text-align: left;
         }
 
         input[type="file"], input[type="text"] {
             width: 100%;
-            padding: 12px;
-            margin-top: 10px;
-            border-radius: 8px;
-            border: 1px solid #ddd;
+            padding: 18px;
+            border-radius: 10px;
+            border: 1px solid #ccc;
             font-size: 16px;
-            background-color: #f9f9f9;
-            transition: 0.3s;
+            background-color: #fafafa;
+            transition: 0.3s ease;
         }
 
         input[type="file"]:hover, input[type="text"]:hover {
-            border-color: #2575fc;
+            border-color: #4a90e2;
+            background-color: #f2f7ff;
         }
 
         button {
             width: 100%;
-            padding: 14px;
-            margin-top: 15px;
-            border-radius: 8px;
+            padding: 16px;
+            margin-top: 20px;
+            border-radius: 10px;
             font-size: 18px;
-            background: #2575fc;
+            background: #4a90e2;
             color: white;
             border: none;
             cursor: pointer;
-            transition: background 0.3s ease;
+            transition: background 0.3s ease, transform 0.2s ease;
         }
 
         button:hover {
-            background: #6a11cb;
+            background: #357ab7;
         }
 
         button:active {
@@ -81,28 +83,48 @@
         }
 
         .result-box {
-            background: #fafafa;
+            background: #f9fafb;
             border-radius: 10px;
             padding: 20px;
-            margin-top: 25px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            margin-top: 30px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
             font-size: 16px;
             color: #333;
             text-align: left;
+            display: none;
+        }
+
+        .result-box h4 {
+            font-size: 20px;
+            font-weight: 500;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .result-text {
+            color: #666;
+            font-size: 14px;
         }
 
         .query-section {
-            margin-top: 30px;
+            margin-top: 20px;
         }
 
         .query-section input {
             width: calc(100% - 20px);
             display: inline-block;
-            padding: 12px;
+            padding: 16px;
             margin-right: 10px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
+            border-radius: 10px;
+            border: 1px solid #ccc;
+            transition: 0.3s ease;
         }
+
+        .query-section input:hover {
+            border-color: #4a90e2;
+            background-color: #f2f7ff;
+        }
+
     </style>
 </head>
 <body>
@@ -110,20 +132,20 @@
         <h2>SuperChargePlus AI RAG System</h2>
         <div class="input-group">
             <input type="file" id="fileInput">
-            <button onclick="uploadFile()">Upload</button>
+            <button onclick="uploadFile()">Upload File</button>
             <p id="uploadResult" class="result-text"></p>
         </div>
 
         <div class="query-section">
-            <h2>Enter Query</h2>
+            <h3>Enter Query</h3>
             <div class="input-group">
                 <input type="text" id="queryInput" placeholder="Enter your query">
-                <button onclick="processFile()">Process</button>
+                <button onclick="processFile()">Process Query</button>
             </div>
         </div>
 
-        <div id="responseBox" class="result-box" style="display:none;">
-            <h3>Query Result:</h3>
+        <div id="responseBox" class="result-box">
+            <h4>Query Result:</h4>
             <p id="responseResult"></p>
         </div>
     </div>

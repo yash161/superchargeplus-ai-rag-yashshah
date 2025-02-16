@@ -1,10 +1,15 @@
 import os
 import json
+import time
+from concurrent.futures import ThreadPoolExecutor
+
 import boto3
 import pandas as pd
 import fitz  # PyMuPDF
 import faiss
 import numpy as np
+import textwrap
+from cachetools import TTLCache, cached
 import requests
 from flask import Flask, request, jsonify, render_template
 from docx import Document
@@ -48,6 +53,7 @@ def extract_text_from_json(data):
 
 
 def extract_text_from_document(file_path):
+    print("Extracting Text from Document::**********************************************")
     """Extract text from various document formats."""
     _, ext = os.path.splitext(file_path)
     text = ""
@@ -80,9 +86,14 @@ def extract_text_from_document(file_path):
     return text
 
 
-def get_embeddings(model, texts):
-    """Generate embeddings using the Gemini model."""
-    return model.get_text_embedding_batch(texts)
+def get_embeddings(model, texts, batch_size=10):
+    """Generate embeddings in batches to handle large files efficiently."""
+    embeddings = []
+    for i in range(0, len(texts), batch_size):
+        batch = texts[i:i + batch_size]
+        batch_embeddings = model.get_text_embedding_batch(batch)
+        embeddings.extend(batch_embeddings)
+    return np.array(embeddings, dtype=np.float32)
 
 
 def create_faiss_index(embeddings):
@@ -95,13 +106,34 @@ def create_faiss_index(embeddings):
 
 def retrieve_similar_texts_from_query(model, faiss_index, query, texts, top_k=1):
     """Retrieve similar texts using FAISS index."""
+    print("Retrieving similar texts from the document:")
     query_embedding = model.get_text_embedding_batch([query])
     query_embedding = np.array(query_embedding)
     distances, indices = faiss_index.search(query_embedding, top_k)
     return [texts[i] for i in indices[0]]
 
+content_cache = TTLCache(maxsize=100, ttl=3600)
 
-import textwrap
+@cached(cache=content_cache)
+def get_cached_or_extract_text(file_url):
+    """Check if the file content is already cached or extract it from the document."""
+    file_name = file_url.split("/")[-1]
+    temp_file_path = f"/tmp/{file_name}"
+
+    # Read the file content directly from S3
+    s3_object = s3.get_object(Bucket=S3_BUCKET, Key=file_name)
+    file_content = s3_object["Body"].read()
+
+    # Save the file locally
+    with open(temp_file_path, "wb") as f:
+        f.write(file_content)
+
+    # Extract text from document
+    extracted_text = extract_text_from_document(temp_file_path)
+    os.remove(temp_file_path)
+
+    return extracted_text
+
 
 def split_document(doc, max_size=9000):
     """Split the document into smaller chunks."""
@@ -110,66 +142,52 @@ def split_document(doc, max_size=9000):
     chunks = textwrap.wrap(doc, max_size)
     return chunks
 
-def generate_response(api_key, retrieved_docs, query):
-    """Generate a response using the Gemini API, ensuring proper input handling."""
-    url = f'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key={api_key}'
 
-    # Debugging: Check if retrieved_docs is a list
-    print(f"Type of retrieved_docs: {type(retrieved_docs)}")
-    print(f"Contents of retrieved_docs: {retrieved_docs}")
+def generate_response(api_key, retrieved_docs, query, max_retries=5, backoff_factor=1):
+    """Efficient API calling with retries & exponential backoff."""
+    url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key={api_key}"
 
-    # Ensure retrieved_docs is a single string
     if isinstance(retrieved_docs, list):
         retrieved_docs = "\n".join(retrieved_docs)
 
-    # Split the retrieved document into smaller chunks
     doc_chunks = split_document(retrieved_docs)
 
-    final_response = ""
+    final_response = []
 
-    for chunk in doc_chunks:
-        # Construct the prompt
+    def request_chunk(chunk):
         prompt = f"""
-        You are an AI assistant with expertise in information retrieval and natural language understanding.
-        Below are some relevant documents retrieved based on a user's query. Your task is to generate an informative, coherent, and contextually relevant response using the given information.
+               You are an AI assistant with expertise in information retrieval and natural language understanding.
+               Below are some relevant documents retrieved based on a user's query. Your task is to generate an informative, coherent, and contextually relevant response using the given information.
 
-        Retrieved Documents:
-        {chunk}
+               Retrieved Documents:
+               {chunk}
 
-        User Query: {query}
+               User Query: {query}
 
-        Instructions:
-        - Use only the information in the retrieved documents to answer the query.
-        - If the documents contain partial or indirect information, infer as much as possible while staying within the context.
-        - If the retrieved documents do not contain enough information, politely acknowledge this and provide a general response based on related concepts.
+               Instructions:
+               - Use only the information in the retrieved documents to answer the query.
+               - If the documents contain partial or indirect information, infer as much as possible while staying within the context.
+               - If the retrieved documents do not contain enough information, politely acknowledge this and provide a general response based on related concepts.
 
-        Response:
-        """
+               Response:
+               """
 
-        # Calculate prompt size to adjust document chunk size
-        prompt_size = len(prompt.encode('utf-8'))
-        max_doc_size = 10000 - prompt_size  # Ensure the total payload size is under the limit
+        for attempt in range(max_retries):
+            response = requests.post(url, json={"contents": [{"parts": [{"text": prompt}]}]})
+            if response.status_code == 200:
+                return response.json().get("candidates", [{}])[0].get("content", {}).get("parts", [{}])[0].get("text",
+                                                                                                               "")
 
-        # Trim the chunk if it exceeds the size limit
-        if len(chunk.encode('utf-8')) > max_doc_size:
-            chunk = chunk[:max_doc_size]
-
-        payload = {"contents": [{"parts": [{"text": prompt}]}]}
-
-        # Send the chunk as a separate request
-        response = requests.post(url, json=payload)
-
-        if response.status_code == 200:
-            response_data = response.json()
-            # Ensure that the response content is treated as a string
-            if isinstance(response_data["candidates"], list):
-                final_response += response_data["candidates"][0]["content"]["parts"][0]["text"] + "\n"
+            if response.status_code == 429:
+                time.sleep(backoff_factor * (2 ** attempt))
             else:
-                final_response += str(response_data["candidates"]) + "\n"
-        else:
-            final_response += f"Error: {response.status_code}, {response.text}\n"
+                return f"Error: {response.status_code}, {response.text}"
 
-    return final_response
+    # Parallel API calls using ThreadPoolExecutor
+    with ThreadPoolExecutor(max_workers=5) as executor:
+        results = list(executor.map(request_chunk, doc_chunks))
+
+    return "\n".join(results)
 
 @app.route("/")
 def index():
@@ -195,7 +213,7 @@ def upload_file():
 
     try:
         print(f"Uploading {file.filename} to S3 bucket {S3_BUCKET} in region {S3_REGION}...")
-        
+
         # Attempt to upload file to S3
         s3.upload_fileobj(file, S3_BUCKET, file.filename)
 
@@ -209,7 +227,7 @@ def upload_file():
         # Log detailed error information
         error_message = f"Error uploading file: {str(e)}"
         print(error_message)
-        
+
         # Optionally print stack trace for debugging purposes
         print("Stack Trace:")
         traceback.print_exc()
@@ -230,43 +248,44 @@ def process_file():
 
     try:
         # Extract filename from S3 URL
-        file_name = file_url.split("/")[-1]
-        temp_file_path = f"/tmp/{file_name}"
-
-        # Read the file content directly from S3
-        s3_object = s3.get_object(Bucket=S3_BUCKET, Key=file_name)
-        file_content = s3_object["Body"].read()
-
-        # Ensure /tmp exists
-        os.makedirs("/tmp", exist_ok=True)
-
-        # Save the file locally
-        with open(temp_file_path, "wb") as f:
-            f.write(file_content)
-
-        # Verify if the file exists before proceeding
-        if not os.path.exists(temp_file_path):
-            return jsonify({"error": f"File {temp_file_path} was not created successfully."}), 500
-
-        # Extract text from document
-        extracted_text = extract_text_from_document(temp_file_path)
-
-        # Clean up temporary file
-        os.remove(temp_file_path)
-
+        # file_name = file_url.split("/")[-1]
+        # temp_file_path = f"/tmp/{file_name}"
+        #
+        # # Read the file content directly from S3
+        # s3_object = s3.get_object(Bucket=S3_BUCKET, Key=file_name)
+        # file_content = s3_object["Body"].read()
+        #
+        # # Ensure /tmp exists
+        # os.makedirs("/tmp", exist_ok=True)
+        #
+        # # Save the file locally
+        # with open(temp_file_path, "wb") as f:
+        #     f.write(file_content)
+        #
+        # # Verify if the file exists before proceeding
+        # if not os.path.exists(temp_file_path):
+        #     return jsonify({"error": f"File {temp_file_path} was not created successfully."}), 500
+        #
+        # # Extract text from document
+        # extracted_text = extract_text_from_document(temp_file_path)
+        # print("Extracted text::",extracted_text)
+        # # Clean up temporary file
+        # os.remove(temp_file_path)
+        extracted_text = get_cached_or_extract_text(file_url)
         texts = [extracted_text]
         print("Text are ::",texts)
+        text_chunks = split_document(extracted_text, max_size=9000)
         # Initialize embedding model
         embedding_model = initialize_embedding_model(API_KEY)
 
         # Generate embeddings
-        embeddings = np.array(get_embeddings(embedding_model, texts), dtype=np.float32)
-
+        # embeddings = np.array(get_embeddings(embedding_model, texts), dtype=np.float32)
+        embeddings = get_embeddings(embedding_model, text_chunks, batch_size=10)
         # Create FAISS index
         faiss_index = create_faiss_index(embeddings)
 
         # Retrieve similar texts
-        retrieved_texts = retrieve_similar_texts_from_query(embedding_model, faiss_index, query, texts)
+        retrieved_texts = retrieve_similar_texts_from_query(embedding_model, faiss_index, query, text_chunks)
 
         # Generate response
         response_text = generate_response(API_KEY, retrieved_texts, query)
