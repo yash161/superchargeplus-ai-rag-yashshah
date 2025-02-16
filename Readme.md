@@ -87,7 +87,7 @@ To run this project locally, ensure you have the following:
     python app.py
     ```
 
-8. The app will be running at `http://127.0.0.1:5000/`.
+8. The app will be running at `http://127.0.0.1:8000/`.
 
 ## Scalability & Optimization
 

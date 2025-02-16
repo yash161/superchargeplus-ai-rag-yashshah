@@ -151,6 +151,9 @@
     </div>
 
     <script>
+        // Automatically detect the backend URL
+        const backendUrl = `${window.location.protocol}//${window.location.hostname}:${window.location.port || "8000"}`;
+
         async function uploadFile() {
             let fileInput = document.getElementById("fileInput").files[0];
             if (!fileInput) {
@@ -162,7 +165,7 @@
             formData.append("file", fileInput);
 
             try {
-                let response = await fetch("http://127.0.0.1:5000/upload", {
+                let response = await fetch(`${backendUrl}/upload`, {
                     method: "POST",
                     body: formData
                 });
@@ -182,7 +185,7 @@
             }
 
             try {
-                let response = await fetch("http://127.0.0.1:5000/process_file", {
+                let response = await fetch(`${backendUrl}/process_file`, {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json"
