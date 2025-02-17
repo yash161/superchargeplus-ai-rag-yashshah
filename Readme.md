@@ -20,6 +20,8 @@ This project is a **Flask-based web application** that allows users to upload va
 - **Pandas** - Data handling (CSV files)  
 - **python-docx** - DOCX text extraction  
 - **Requests** - API calls to Gemini API  
+- **Caching** - For larger files, once processed, embeddings and FAISS index values are cached. This enables faster response times (under 5 seconds) for subsequent queries as the data doesn't need to be recomputed.
+
 
 ## Prerequisites  
 
