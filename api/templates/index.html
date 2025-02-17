@@ -175,7 +175,8 @@
       }
 
       // Build the S3 URL or handle your backend logic for file uploads
-      const backendUrl = `${window.location.protocol}//${window.location.hostname}`;
+      const backendUrl = `${window.location.protocol}//${window.location.hostname}${window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost' ? ':8000' : ''}`;
+
       let formData = new FormData();
       formData.append("file", fileInput);
 
@@ -207,7 +208,7 @@
       }
 
       try {
-        const backendUrl = `${window.location.protocol}//${window.location.hostname}`;
+        const backendUrl = `${window.location.protocol}//${window.location.hostname}${window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost' ? ':8000' : ''}`;
         let response = await fetch(`${backendUrl}/process_file`, { 
           method: "POST",
           headers: {
