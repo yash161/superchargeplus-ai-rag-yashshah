@@ -215,3 +215,14 @@ Current Url-https://neighbouring-rhonda-supercharge-bad0b07c.koyeb.app/
 - **Optimized FAISS Indexing**: High-performance similarity search using FAISS for fast and scalable document indexing.
 - **Efficient API Calls**: Optimized Gemini API requests to minimize latency and ensure responsiveness even under high traffic.
 
+
+
+### Note on File Size
+
+For files larger than **50MB**, it is recommended to run the application on your **local machine**. Once the file is processed, the embeddings and FAISS index values will be cached, and subsequent responses will be generated in **less than 5 seconds**.  
+
+For running in the cloud, please use **smaller files** due to the limitations of open-source cloud services, which have restricted storage space.
+
+Thank you for the opportunity!
+
+- **Saurav**
