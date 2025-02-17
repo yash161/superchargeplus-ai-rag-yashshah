@@ -1,4 +1,4 @@
-# Document Processing and Q&A System  
+# Cloud Based Scalable Document Processing and Q&A System  
 
 This project is a **Flask-based web application** that allows users to upload various types of documents (PDF, text, CSV, JSON, DOCX) and query their content. It uses **machine learning models** and **FAISS indexing** for efficient text extraction, embedding generation, and similarity search.
 
@@ -32,6 +32,9 @@ Ensure you have:
 - PyMuPDF  
 - pandas  
 - python-docx  
+- Flask-Cors
+- llama-index
+- llama-index-embeddings-gemini
 
 ## Installation  
 
@@ -93,6 +96,7 @@ Ensure you have:
     ```
     http://127.0.0.1:8000/
     ```
+    ![alt text](image-3.png)
 
 ---
 
@@ -174,7 +178,11 @@ docker push your-dockerhub-username/flask-app
 5. Click **"Deploy"** and wait for deployment.
 6. Your app will be live at the provided Koyeb URL.
 
+![alt text](image-1.png)
+
 Current Url-https://neighbouring-rhonda-supercharge-bad0b07c.koyeb.app/
+
+![alt text](image-2.png)
 
 ### API Endpoints
 
