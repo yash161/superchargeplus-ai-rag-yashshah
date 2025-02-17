@@ -1,158 +1,207 @@
-# Document Processing and Q&A System
+# Document Processing and Q&A System  
 
-This project is a web application built with Flask that allows users to upload various types of documents (PDF, text, CSV, JSON, DOCX) and query the content for relevant information. It leverages machine learning models and FAISS indexing to extract text from documents, generate embeddings, and perform similarity searches.
+This project is a **Flask-based web application** that allows users to upload various types of documents (PDF, text, CSV, JSON, DOCX) and query their content. It uses **machine learning models** and **FAISS indexing** for efficient text extraction, embedding generation, and similarity search.
 
-## Features
+## Features  
 
-- **Document Upload**: Users can upload documents to the system.
-- **Text Extraction**: Extracts text from different file formats like PDF, TXT, CSV, JSON, DOCX.
-- **Embedding Generation**: Generates embeddings using the Gemini API.
-- **FAISS Indexing**: Uses FAISS for fast retrieval of similar documents.
-- **Question Answering**: Allows users to input queries and retrieve relevant responses based on the uploaded document.
+- **Document Upload**: Users can upload documents.  
+- **Text Extraction**: Supports multiple formats (PDF, TXT, CSV, JSON, DOCX).  
+- **Embedding Generation**: Utilizes **Gemini API** for generating embeddings.  
+- **FAISS Indexing**: Enables fast retrieval of similar documents.  
+- **Question Answering**: Responds to user queries based on document content.  
 
-## Technologies Used
+## Technologies Used  
 
-- **Flask**: Web framework for building the web app.
-- **Boto3**: AWS SDK for interacting with AWS services (S3).
-- **FAISS**: Library for efficient similarity search and clustering.
-- **GeminiEmbedding**: Embedding generation from Gemini API.
-- **PyMuPDF**: PDF text extraction.
-- **Pandas**: Data handling (for CSV files).
-- **python-docx**: DOCX text extraction.
-- **Requests**: For making API calls to Gemini API.
+- **Flask** - Web framework  
+- **Boto3** - AWS SDK for S3  
+- **FAISS** - Efficient similarity search  
+- **GeminiEmbedding** - Embedding generation from Gemini API  
+- **PyMuPDF** - PDF text extraction  
+- **Pandas** - Data handling (CSV files)  
+- **python-docx** - DOCX text extraction  
+- **Requests** - API calls to Gemini API  
 
-## Prerequisites
+## Prerequisites  
 
-To run this project locally, ensure you have the following:
+Ensure you have:  
 
-- Python 3.12
-- Flask
-- Boto3
-- FAISS
-- PyMuPDF
-- pandas
-- python-docx
+- Python 3.12  
+- Flask  
+- Boto3  
+- FAISS  
+- PyMuPDF  
+- pandas  
+- python-docx  
 
-## Installation
+## Installation  
 
-1. Clone the repository:
+1. **Clone the repository**  
 
-    ```bash
+    ```sh
     git clone https://github.com/yash161/superchargeplus-ai-rag-yashshah.git
     ```
 
-2. Navigate to the project directory:
+2. **Navigate to the project directory**  
 
-    ```bash
+    ```sh
     cd superchargeplus-ai-rag-yashshah
     ```
 
-3. Create a virtual environment:
+3. **Create a virtual environment**  
 
-    - On Windows:
-      ```bash
+    - Windows:
+      ```sh
       python -m venv venv
       ```
 
-    - On macOS/Linux:
-      ```bash
+    - macOS/Linux:
+      ```sh
       python3 -m venv venv
       ```
 
-4. Activate the virtual environment:
+4. **Activate the virtual environment**  
 
-    - On Windows:
-      ```bash
+    - Windows:
+      ```sh
       source venv/Scripts/activate
       ```
 
-    - On macOS/Linux:
-      ```bash
+    - macOS/Linux:
+      ```sh
       source venv/bin/activate
       ```
 
-5. Install the required dependencies:
+5. **Install dependencies**  
 
-    ```bash
+    ```sh
     pip install -r requirements.txt
     ```
 
-6. Set up AWS credentials for S3 access:
+6. **Set up AWS credentials**  
 
-    - Add your `AWS_ACCESS_KEY` and `AWS_SECRET_KEY` to the environment variables or use an AWS credentials file.
+    Add `AWS_ACCESS_KEY` and `AWS_SECRET_KEY` to your environment variables or use an AWS credentials file I have added it for now.
 
-7. Run the Flask application:
+7. **Run the Flask application**  
 
-    ```bash
+    ```sh
     python app.py
     ```
 
-8. The app will be running at `http://127.0.0.1:8000/`.
+8. **Access the application**  
 
-## Scalability & Optimization
+    Open your browser and go to:  
+    ```
+    http://127.0.0.1:8000/
+    ```
 
-One of the key focuses of this project is its scalability and optimization to handle large numbers of document uploads and queries effectively. Here's how these factors are addressed:
+---
 
-- **Scalable Cloud Hosting**: The project is hosted on an EC2 Linux instance, enabling easy scaling. While the instance has been stopped due to cost considerations, it can be restarted anytime based on user requirements. The project is designed to scale horizontally, making it capable of handling multiple concurrent users.
-  
-- **S3 Integration**: By leveraging AWS S3 for file storage, multiple documents can be uploaded, stored, and processed without impacting performance. This allows the system to manage large volumes of data efficiently, while ensuring easy retrieval and processing of files.
+## **Deploying with Docker and Koyeb**  
 
-- **Efficient Similarity Search with FAISS**: FAISS is used for fast and optimized similarity search. Its high-performance indexing allows the system to handle large datasets and return relevant results quickly, even with multiple document uploads.
+### 1. **Create a Dockerfile**  
 
-- **Optimized API Calls**: The Gemini API integration is optimized to minimize unnecessary calls and ensure that embedding generation is fast and reliable, supporting the overall system’s efficiency.
+Ensure your project has a `Dockerfile`. If not, create one in the project root:
 
-## Creativity & Problem-Solving
+```dockerfile
+ # Stage 1: Build
+FROM python:3.12 AS builder
 
-This project showcases creativity and problem-solving across several areas:
+WORKDIR /app
 
-- **Multi-format Document Processing**: Handling different file formats (PDF, TXT, CSV, JSON, DOCX) in a seamless manner required creative approaches to text extraction, such as using PyMuPDF for PDFs and python-docx for DOCX files. The system adapts flexibly to various document types, making it versatile for real-world usage.
+# Create and activate virtual environment
+RUN python3 -m venv venv
+ENV VIRTUAL_ENV=/app/venv
+ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 
-- **Embedding Generation & Similarity Search**: One of the main challenges was ensuring that the system could understand and retrieve relevant information from documents. By integrating the Gemini API for embedding generation and using FAISS for similarity searches, the system is capable of providing highly relevant answers to user queries, based on the content of uploaded documents.
+# Install dependencies
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
 
-- **API Integration with AWS**: Solving the problem of scalable file storage was achieved using AWS S3, allowing for secure and efficient document uploads. Coupled with EC2 hosting, this solution provides a robust cloud-based system that can be easily scaled up when needed.
+# Stage 2: Run
+FROM python:3.12 AS runner
 
-- **Optimizing User Experience**: The interface has been designed to be user-friendly, with clear instructions for uploading and processing files. The focus on simplicity helps reduce friction for users, ensuring that they can quickly upload documents and get answers without facing technical hurdles.
+WORKDIR /app
 
-## Hosting
+# Copy virtual environment from builder stage
+COPY --from=builder /app/venv venv
 
-The project is hosted on an EC2 Linux instance, but it has been stopped due to cost considerations. If you'd like to check it out, please let me know, and I will start the instance for you. The project is fully scalable, and the EC2 instance can be restarted as needed to accommodate more users. 
+# Ensure virtual environment is activated
+ENV VIRTUAL_ENV=/app/venv
+ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 
-Additionally, the files are uploaded to an S3 bucket, allowing for multiple documents to be uploaded and processed concurrently without affecting performance.
+# Copy application code
+COPY . .
 
-## API Endpoints
+# Set environment variable for Flask app
+ENV FLASK_APP=api/index.py
 
-### Upload File
+# Expose the application port
+EXPOSE 8000
 
+# Run Flask application
+CMD ["python", "-m", "flask", "run", "--host=0.0.0.0", "--port=8000"]
+
+```
+## Docker Setup and Deployment
+
+### 2. Build Docker Image
+```sh
+docker build -t your-dockerhub-username/flask-app .
+```
+
+### 3.Tag Docker Image
+```sh
+docker tag superchargeimageyash:latest username/superchargeimageyash:latest
+```
+
+### 4. Login to Docker Hub
+```sh
+docker login -u your-dockerhub-username
+```
+
+### 5.Push Docker Image to Docker Hub
+```sh
+docker push your-dockerhub-username/flask-app
+```
+### 6. Deploy on Koyeb
+
+1. Go to [Koyeb](https://www.koyeb.com/) and sign in.
+2. Click **"Create App"** → **"Deploy from Docker Image"**.
+3. Enter your **Docker Image URL** (e.g., `your-dockerhub-username/flask-app`).
+4. Set the **port** to `8000`.
+5. Click **"Deploy"** and wait for deployment.
+6. Your app will be live at the provided Koyeb URL.
+
+Current Url-https://neighbouring-rhonda-supercharge-bad0b07c.koyeb.app/
+
+### API Endpoints
+
+#### Upload File
 - **URL**: `/upload`
 - **Method**: `POST`
 - **Description**: Uploads a file to the S3 bucket.
-- **Parameters**: 
+- **Parameters**:
   - `file` (form data): The file to be uploaded.
 
-### Process File
-
+#### Process File
 - **URL**: `/process_file`
 - **Method**: `POST`
-- **Description**: Processes an uploaded file, retrieves similar texts, and generates a response to a user query.
+- **Description**: Processes an uploaded file, retrieves similar texts, and generates a response.
 - **Parameters**:
   - `file_url` (JSON): URL of the file stored in S3.
-  - `query` (JSON): User query to be answered based on the document content.
+  - `query` (JSON): User query based on document content.
 
-## Example Usage
+### Scalability & Optimization
 
-1. Upload a file to the system by sending a POST request to `/upload` with the file attached.
-2. Once uploaded, call the `/process_file` endpoint with the URL of the uploaded file and a query for the system to answer.
+- **Cloud Hosting**: The app is hosted on Koyeb, providing automatic scaling and handling the infrastructure seamlessly. The Docker image is deployed on Koyeb for efficient and scalable hosting.
+  - **Docker**: The app is containerized using a Dockerfile, ensuring consistent environments across deployments. The Docker image is built using the following command:
+    ```sh
+    docker build -t your-dockerhub-username/flask-app .
+    ```
 
-## Environment Variables
+  - **Koyeb Deployment**: The Docker image is deployed on Koyeb by selecting "Create App" → "Deploy from Docker Image" and configuring the app with port 8000.
 
-- `AWS_ACCESS_KEY`: Your AWS access key for S3.
-- `AWS_SECRET_KEY`: Your AWS secret key for S3.
-- `API_KEY`: Your Gemini API key for embedding generation.
+- **AWS S3 Integration**: Efficient storage for large document uploads, leveraging AWS S3 for scalable file management.
+- **Optimized FAISS Indexing**: High-performance similarity search using FAISS for fast and scalable document indexing.
+- **Efficient API Calls**: Optimized Gemini API requests to minimize latency and ensure responsiveness even under high traffic.
 
-## Contributing
-
-1. Fork the repository.
-2. Create a new branch (`git checkout -b feature-branch`).
-3. Commit your changes (`git commit -am 'Add feature'`).
-4. Push to the branch (`git push origin feature-branch`).
-5. Create a new Pull Request.
