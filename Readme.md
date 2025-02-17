@@ -163,6 +163,8 @@ docker login -u your-dockerhub-username
 ```sh
 docker push your-dockerhub-username/flask-app
 ```
+![alt text](image.png)
+
 ### 6. Deploy on Koyeb
 
 1. Go to [Koyeb](https://www.koyeb.com/) and sign in.
