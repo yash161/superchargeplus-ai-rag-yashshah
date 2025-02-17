@@ -167,9 +167,14 @@
         alert("Please select a file to upload.");
         return;
       }
-      
+
+      const maxFileSize = 100 * 1024 * 1024; // 100 MB limit
+      if (fileInput.size > maxFileSize) {
+        alert("File is too large. Please upload a smaller file.");
+        return;
+      }
+
       // Build the S3 URL or handle your backend logic for file uploads
-      // For example, if your backend returns a file_url in the JSON response, use that
       const backendUrl = `${window.location.protocol}//${window.location.hostname}`;
       let formData = new FormData();
       formData.append("file", fileInput);
@@ -180,12 +185,10 @@
           body: formData,
         });
         let result = await response.json();
-        
+
         // Check if upload was successful
         if (result.message) {
           document.getElementById("uploadResult").innerText = result.message;
-          // If your server or S3 link is consistent, store the file URL
-          // For instance, we can assume:
           uploadedFileUrl = `https://filereaderflask.s3.us-east-1.amazonaws.com/${fileInput.name}`;
         } else {
           document.getElementById("uploadResult").innerText = result.error || "Upload error.";
@@ -196,26 +199,26 @@
     }
 
     async function processFile() {
-    let fileInput = document.getElementById("fileInput").files[0];
-    let query = document.getElementById("queryInput").value;
-    if (!fileInput || !query) {
+      let fileInput = document.getElementById("fileInput").files[0];
+      let query = document.getElementById("queryInput").value;
+      if (!fileInput || !query) {
         alert("Please select a file and enter a query.");
         return;
-    }
+      }
 
-    try {
+      try {
         const backendUrl = `${window.location.protocol}//${window.location.hostname}`;
         let response = await fetch(`${backendUrl}/process_file`, { 
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                file_url: `https://filereaderflask.s3.us-east-1.amazonaws.com/${fileInput.name}`,
-                query: query
-            })
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            file_url: `https://filereaderflask.s3.us-east-1.amazonaws.com/${fileInput.name}`,
+            query: query
+          })
         });
-        
+
         let result = await response.json();
         document.getElementById("responseBox").style.display = "block";
         document.getElementById("responseResult").innerText = result.response || result.error;
@@ -224,11 +227,11 @@
         document.body.scrollTop = 0; // For Safari
         document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE, and Opera
 
-    } catch (error) {
+      } catch (error) {
         document.getElementById("responseBox").style.display = "block";
         document.getElementById("responseResult").innerText = "Error processing file.";
+      }
     }
-}
 
   </script>
 </body>

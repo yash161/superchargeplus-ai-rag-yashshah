@@ -11,6 +11,8 @@ import numpy as np
 import textwrap
 from cachetools import TTLCache, cached
 import requests
+from werkzeug import Request
+# Request.max_form_parts = 10000
 from flask import Flask, request, jsonify, render_template
 from docx import Document
 # from sentence_transformers import SentenceTransformer
@@ -19,7 +21,7 @@ import textwrap
 # Initialize Flask app
 app = Flask(__name__, template_folder="templates")
 app.config['ALLOWED_HOSTS'] = ['*']
-app.config['MAX_CONTENT_LENGTH'] = 50 * 1024 * 1024
+app.config['MAX_CONTENT_LENGTH'] = 100 * 1024 * 1024
 # S3 Configurations
 S3_BUCKET = "filereaderflask"
 S3_REGION = "us-east-1"
