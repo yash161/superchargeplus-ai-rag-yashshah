@@ -225,6 +225,3 @@ For files larger than **50MB**, it is recommended to run the application on your
 
 For running in the cloud, please use **smaller files** due to the limitations of open-source cloud services, which have restricted storage space.
 
-Thank you for the opportunity!
-
-- **Saurav**
